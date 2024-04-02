@@ -4,8 +4,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
+@AllArgsConstructor     //Article 생성자를 대체하는 어노테이션 추가
+@NoArgsConstructor      // 기본 생성자 추가 어노테이션
+@ToString               //toString() 메소드를 대체하는 어노테이션 추가
 public class Article {
     @Id
     @GeneratedValue
@@ -15,18 +21,22 @@ public class Article {
     @Column
     private String content;
 
-    public Article(Long id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-    }
+//    Article(){      //기본 생성자
+//
+//    }
 
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
+//    public Article(Long id, String title, String content) {
+//        this.id = id;
+//        this.title = title;
+//        this.content = content;
+//    }
+
+//    @Override
+//    public String toString() {
+//        return "Article{" +
+//                "id=" + id +
+//                ", title='" + title + '\'' +
+//                ", content='" + content + '\'' +
+//                '}';
+//    }
 }
