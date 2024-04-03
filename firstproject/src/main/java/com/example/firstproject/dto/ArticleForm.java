@@ -9,6 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor     //2. 새 어노테이션 추가
 @ToString               //5. 새 어노테이션 추가
 public class ArticleForm {
+    private Long id;        // 1. id 필드 추가
     private String title;
     private String content;
 
@@ -27,6 +28,6 @@ public class ArticleForm {
 //    }
 
     public Article toEntity() {
-        return new Article(null, title, content);
+        return new Article(id, title, content);     // 2. null -< id 로 수정
     }
 }

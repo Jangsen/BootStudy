@@ -37,7 +37,7 @@ private ArticleRepository articleRepository;
             Article saved = articleRepository.save(article);
             log.info(saved.toString());
 //            System.out.println(saved.toString());
-            return "";
+            return "redirect:/articles/" + saved.getId();
         }
         @GetMapping("/articles/{id}")       // 데이터 조회 요청 접수
         public String show(@PathVariable Long id, Model model){      // 매개변수로 id 받아오기        모델을 사용하기 위해  model 객체 받아오기
@@ -63,6 +63,34 @@ private ArticleRepository articleRepository;
             // 2. 모델에 데이터 등록하기
             // 3. 사용자에게 보여 줄 뷰 페이지 설정하기
             return "articles/index";
+        }
+        @GetMapping("/articles/{id}/edit")
+        public String edit(@PathVariable Long id, Model model){  // 2. id를 매개변수로 받아오기   1. model 객체 받아오기
+            // 수정할 데이터 가져오기
+            Article artilceEntity = articleRepository.findById(id).orElse(null); // 1. DB에서 수정할 데이터 가져오기
+            // 모델에 데이터 등록하기
+            model.addAttribute("article", artilceEntity);   // 2. articleEntity를 article로 등록
+            // 뷰 페이지 설정하기
+            return "articles/edit";
+        }
+        @PostMapping("/articles/update") // 2. URL 요청 접수
+        public String update(ArticleForm form){     // 1. 메소드 생성    매개 변수로 DTO 받아 오기
+        // 수정 폼에서 전송한 데이터는 DTO에서 받음
+            log.info(form.toString());
+            // 1. DTO를 엔티티로 변환하기
+            Article articleEntity = form.toEntity();    //1. Dto(form)를 엔티티(articleEntity)로 변환하기
+            log.info(articleEntity.toString());         //2. 엔티티로 잘 변환됐는지 로그 찍기
+            // 2. 엔티티를 DB에 저장하기
+            // 2-1. DB에서 기존 데이터 가져오기
+            Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
+//           2. 데이터 저장                        1. DB에서 데이터 찾기              3. 데이터가 없으면 null 반환
+            // 2-2. 기존 데이터 값을 갱신하기
+            if (target != null){
+                articleRepository.save(articleEntity);  //엔티티를 DB에 저장(갱신)
+            // target이 null이 아니면 (target != null), 즉 기존 데이터가 있다면 articleRepository에 저장된 내용을 DB로 갱신
+            }
+            // 3. 수정 결과 페이지를 리다이렉트하기
+            return "redirect:/articles/" + articleEntity.getId();
         }
 }
 
