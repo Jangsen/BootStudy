@@ -1,0 +1,352 @@
+Rest API (Representational State Transfer API)
+
+서버에서 보내는 응답이 특정 기기에 종속되지 않도로고 모든 기기에서 통용될 수 있는 데이터를 반환
+
+JSON 데이터는 키와 값으로 구성된 정렬되지 않은 속성의 집합
+
+키	문자열이므로 ""  항상 큰따옴표
+값	문자열 일때만 "" 큰따옴표
+속성	
+
+
+fetch('https://jsonplaceholder.typicode.com/todos/1')	HTTP 요청 코드
+      .then(response => response.json())
+      .then(json => console.log(json))
+
+
+JSON 데이터 응답
+
+{
+  "userId": 1,
+  "id": 1,
+  "title": "delectus aut autem",
+  "completed": false
+}
+
+데이터를 생성, 조회, 수정, 삭제하려면
+HTTP 메소드로 요청을 보내야 함
+
+
+REST API는 HTTP 메소드를 지원
+
+데이터 조회를 요청 할 때 	==	method 속성	==	GET
+( GET 은 DEFAULT값 )
+
+1. 단일 데이터 조회
+
+fetch('https://jsonplaceholder.typicode.com/posts/1')
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+
+{
+  id: 1,
+  title: '...',
+  body: '...',
+  userId: 1
+}
+
+2. 모든 데이터 조회
+
+method	==	GET
+
+fetch('https://jsonplaceholder.typicode.com/posts')
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+
+[
+  { id: 1, title: '...' /* ... */ },
+  { id: 2, title: '...' /* ... */ },
+  { id: 3, title: '...' /* ... */ },
+  /* ... */
+  { id: 100, title: '...' /* ... */ },
+];
+
+3. 새 게시글 등록
+
+데이터 생성 요청이므로 method 속성 값은 POST
+
+fetch('https://jsonplaceholder.typicode.com/posts', {
+  method: 'POST',
+  body: JSON.stringify({
+    title: 'foo',
+    body: 'bar',
+    userId: 1,
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+
+{
+  id: 101,
+  title: 'foo',
+  body: 'bar',
+  userId: 1
+}
+
+4. 게시글 수정
+
+method	==	PUT	==	기존 데이터를 전부 새 내용으로 변경/ 만약 기존 데이터가 없으면 새로 생성
+
+1번 데이터의 속성을 모두 수정 요청
+
+fetch('https://jsonplaceholder.typicode.com/posts/1', {
+  method: 'PUT',
+  body: JSON.stringify({
+    id: 1,
+    title: 'foo',
+    body: 'bar',
+    userId: 1,
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+
+{
+  id: 1,
+  title: 'foo',
+  body: 'bar',
+  userId: 1
+}
+
+5. 게시글 수정
+
+method	==	PATCH	==	기존 데이터 중에서 일부만 새 내용으로 변경
+
+1번 데이터의 title만 수정 요청
+
+fetch('https://jsonplaceholder.typicode.com/posts/1', {
+  method: 'PATCH',
+  body: JSON.stringify({
+    title: 'foo',
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+
+{
+  id: 1,
+  title: 'foo',
+  body: '...',
+  userId: 1
+}
+
+6. 게시글 삭제 요청
+
+method	==	DELETE
+
+1번 게시글을 삭제
+
+fetch('https://jsonplaceholder.typicode.com/posts/1', {
+  method: 'DELETE',
+});
+
+
+
+응답 Response
+200		==	요청이 잘 처리되었음을 의미
+
+404		==	요청한 페이지를 찾을 수 없음을 의미
+
+
+HTTP 상태의 코드
+
+클라이언트가 보낸 요청이 성공했는지, 실패했는지 알려 주는 코드
+
+코드는 100번대 ~ 500번대 까지 5개 그룹으로 나뉨
+
+처리중 -- 처리 -- 행동 -- 요청오류 -- 서버에러
+
+1XX	요청이 수신되어 처리 중
+
+2XX	요청이 정상적으로 처리됨
+
+3XX	요청을 완료하려면 추가 행동이 필요	
+
+4XX	클라이언트의 요청이 잘못돼 서버가 요청을 수행할 수 없음	
+
+5XX	서버 내부에 에러가 발생해 클라이언트 요청에 대해 적절히 수행하지 못함
+
+
+HTTP 요청 메세지와 응답 메시지
+
+GET 메소드를 통해 데이터 조회를 요청하고 성공한 응답과 실패한 응답을 받아옴
+
+요청과 응답은 HTTP 메시지에 실려 전송됨
+
+요청	==	HTTP 요청 메시지
+
+응답	==	HTTP 응답 메시지
+
+HTTP 메시지	==	시작 라인	(start line), 헤더(header), 빈 라인(blank line), 본문(body) 로 구성
+
+시작 라인		==	HTTP 요청 또는 응답 내용이 있음 (시작 라인은 항상 1줄로 끝남)
+
+헤더		==	HTTP 전송에 필요한 부가 정보(metadata)가 있음
+
+빈 라인		==	헤더의 끝을 알리는 빈 줄, 헤더가 모두 전송되었음을 알림		
+
+본문		==	실제 전송하는 데이터가 있음		
+
+GET /posts/101 HTTP/1.1
+Host: jsonplaceholder.typicode.com		
+
+						시작 라인과 헤더
+HTTP/1.1 404
+date: Thu, 04 Apr 2024 02:54:23 GMT
+content-type: application/json; charset=utf-8
+content-length: 2
+report-to: {"group":"heroku-nel","max_age":3600,"endpoints":[{"url":"https://nel.heroku.com/reports?ts=1712189097&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=1Q9qOzrN2mnLV5V6qsi1cxO0PSEJdiZwN1AcKFgAyTE%3D"}]}
+reporting-endpoints: heroku-nel=https://nel.heroku.com/reports?ts=1712189097&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=1Q9qOzrN2mnLV5V6qsi1cxO0PSEJdiZwN1AcKFgAyTE%3D
+nel: {"report_to":"heroku-nel","max_age":3600,"success_fraction":0.005,"failure_fraction":0.05,"response_headers":["Via"]}
+x-powered-by: Express
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1712189123
+vary: Origin, Accept-Encoding
+access-control-allow-credentials: true
+cache-control: max-age=43200
+pragma: no-cache
+expires: -1
+x-content-type-options: nosniff
+etag: W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"
+via: 1.1 vegur
+cf-cache-status: HIT
+age: 10166
+priority: u=1,i
+server: cloudflare
+cf-ray: 86ee0371bb472b82-LAX
+alt-svc: h3=":443"; ma=86400
+
+헤더	==	응답을 보낸 날짜(date), 응답 데이터 형식(content-type) 등
+
+본문(body)	404 에러로 본문은 비어있음
+{ }	
+
+
+시작 라인과 헤더에는 응답 정보
+
+본문에는 생성 데이터가 실려 반환됨.
+
+JSON 데이터를 잘못 보내면
+
+응답이 500으로 옴
+
+상태코드 500	==	서버 내부에 에러가 발생했다는 것을 의미
+
+응답의 BODY	==	SyntaxError ... (구문 오류 발생)
+
+** HTTP 요청 메시지
+
+POST /posts HTTP/1.1
+Content-Length: 67
+Content-Type: application/json
+Host: jsonplaceholder.typicode.com
+{
+  title: "오늘은 왠지",
+  body: "치킨을 먹고 싶다!"
+}
+
+** HTTP 응답 메시지
+** 시작 라인과 헤더
+HTTP/1.1 500
+date: Thu, 04 Apr 2024 03:06:06 GMT
+content-type: text/html; charset=utf-8
+report-to: {"group":"heroku-nel","max_age":3600,"endpoints":[{"url":"https://nel.heroku.com/reports?ts=1712199966&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=stXQtotl0inIpTHNebz%2FMAZwD0bnMKfKqQWZw96vKKE%3D"}]}
+reporting-endpoints: heroku-nel=https://nel.heroku.com/reports?ts=1712199966&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=stXQtotl0inIpTHNebz%2FMAZwD0bnMKfKqQWZw96vKKE%3D
+nel: {"report_to":"heroku-nel","max_age":3600,"success_fraction":0.005,"failure_fraction":0.05,"response_headers":["Via"]}
+x-powered-by: Express
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1712199983
+vary: Origin, X-HTTP-Method-Override, Accept-Encoding
+access-control-allow-credentials: true
+cache-control: no-cache
+pragma: no-cache
+expires: -1
+via: 1.1 vegur
+cf-cache-status: DYNAMIC
+priority: u=1,i
+server: cloudflare
+cf-ray: 86ee149d3cdf83f2-LAX
+alt-svc: h3=":443"; ma=86400
+
+** 본문
+SyntaxError: Unexpected token t in JSON at position 4
+    at JSON.parse (<anonymous>)
+    at parse (/app/node_modules/body-parser/lib/types/json.js:89:19)
+    at /app/node_modules/body-parser/lib/read.js:121:18
+    at invokeCallback (/app/node_modules/body-parser/node_modules/raw-body/index.js:224:16)
+    at done (/app/node_modules/body-parser/node_modules/raw-body/index.js:213:7)
+    at IncomingMessage.onEnd (/app/node_modules/body-parser/node_modules/raw-body/index.js:273:7)
+    at IncomingMessage.emit (node:events:525:35)
+    at endReadableNT (node:internal/streams/readable:1358:12)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+응답 메시지 시작 라인에 상태 코드 500과 본문에 에러가 났음을 알리는 내용들이 적혀 있음
+
+******** PATCH 요청하고 응답받기
+
+수정할 내용을 BODY에 실어 보내야 함
+
+JSON 형식	==	속성에 큰따옴표를 붙이는 것 (중요!!)
+
+Response
+200		응답 성공
+
+{
+"userId": 1,
+"id": 1,
+"title": "asdasds",
+"body": "123456"
+}		BODY	==	수정한 내용이 반환됨.
+
+******** DELETE 요청하고 응답받기
+
+Response
+200		응답 성공	(삭제 성공)
+
+** 요청 메시지의 시작 라인과 헤더
+
+DELETE /posts/10 HTTP/1.1
+Host: jsonplaceholder.typicode.com	
+
+** 응답 메시지의 시작 라인과 헤더
+
+HTTP/1.1 200
+date: Thu, 04 Apr 2024 03:14:38 GMT
+content-type: application/json; charset=utf-8
+content-length: 2
+report-to: {"group":"heroku-nel","max_age":3600,"endpoints":[{"url":"https://nel.heroku.com/reports?ts=1712200478&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=IVdVuH%2FGMZcKE5a26Q8j9i9GnuAH3HY7lcOiT9ocz8A%3D"}]}
+reporting-endpoints: heroku-nel=https://nel.heroku.com/reports?ts=1712200478&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=IVdVuH%2FGMZcKE5a26Q8j9i9GnuAH3HY7lcOiT9ocz8A%3D
+nel: {"report_to":"heroku-nel","max_age":3600,"success_fraction":0.005,"failure_fraction":0.05,"response_headers":["Via"]}
+x-powered-by: Express
+x-ratelimit-limit: 1000
+x-ratelimit-remaining: 999
+x-ratelimit-reset: 1712200523
+vary: Origin, Accept-Encoding
+access-control-allow-credentials: true
+cache-control: no-cache
+pragma: no-cache
+expires: -1
+x-content-type-options: nosniff
+etag: W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"
+via: 1.1 vegur
+cf-cache-status: DYNAMIC
+priority: u=1,i
+server: cloudflare
+cf-ray: 86ee211c0bf814f2-LAX
+alt-svc: h3=":443"; ma=86400
+
+** 응답 메시지의 본문
+
+{}
+

@@ -1,0 +1,55 @@
+11.1 Rest API의 동작 이해하기
+
+클라이언트가 보내는 HTTP 요청 메세지의 첫 줄에는 시작 라인과 요청 라인이 있음
+
+그 아래에는 헤더와 본문이 있음
+
+응답 메시지의 첫 줄에도 시작 라인인 상태 라인이 있고 
+그 아래에 헤더와 본문이 있음
+
+REST API의 응답 표준으로 사용하는 JSON은 키와 값의 쌍으로 된 속성으로 데이터를 표현
+
+JSON의 값으로 또 다른 JSON 데이터나 배열을 넣을 수 있음
+
+REST: HTTP URL로 서버의 자원(resource)을 명시하고 HTTP 메소드(POST, GET, PATCH/PUT, DELETE)로 
+	해당 자원에 대해 CRUD(생성, 조회, 수정, 삭제) 하는 것
+
+API: 클라이언트가 서버의 자원을 요청할 수 있도록 서버에서 제공하는 인터페이스
+
+REST API		==	REST 기반으로 API를 구현한 것
+(REST API를 잘 구현하면 클라이언트가 기기에 구애받지 않고 서버의 자원을 이용할 수 있음)
+(서버가 클라이언트 요청에 체계적으로 대응 할 수 있음)
+(서버 프로그램의 재사용성과 확장성이 좋아짐)
+
+11.2 REST API의 구현 과정
+
+REST API를 구현하려면?
+
+REST API의 주소(URL 설계)
+
+Artilcle 데이터를 CRUD 하기위해 REST API 주소를 설계
+
+
+			REST API URL
+			
+			GET / articles
+			GET / articles/id
+JSON <--> REST API	POST / articles
+			PATCH / articles/id
+			DELETE / articles/id
+
+* 조회 요청 /api/articles 또는 /api/articles/{id}
+->GET 메소드로 Article 목록 전체 또는 단일 Article을 조회
+
+* 생성 요청 /api/articles
+->
+
+
+
+
+
+
+
+
+11.3.2 Rest API: GET 구현하기
+

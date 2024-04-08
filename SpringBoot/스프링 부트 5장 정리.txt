@@ -1,0 +1,164 @@
+5장 게시글 읽기 : Read
+
+5.1 데이터 조회 과정
+
+DB에 저장된 데이터를 웹 페이지에 출력하는 과정
+
+1. 사용자가 데이터를 조회해 달라고 웹 페이지에서 URL요청을 보냄
+
+2. 서버의 컨트롤러가 요청을 받아 해당 URL에서 찾으려는 데이터 정보를 레포지토리에 전달
+
+3. 레포지토리는 정보를 가지고 DB에 데이터 조회를 요청
+
+4. DB는 해당 데이터를 찾아 이를 엔티티로 반환
+
+5. 반환된 엔티티는 모델을 통해 뷰 템플릿으로 전달
+
+6. 최종적으로 결과 뷰 페이지가 완성되어 사용자의 화면에 출력
+
+데이터 조회 과정
+
+			       	2. 원하는 데이터의 정보 전달
+	뷰	1. URL 요청 ->	            컨트롤러			3. DB 조회 요청 ->
+				   	 모델					 데이터
+        클라이언트	<-6. 최종 뷰 페이지 출력        뷰 (엔티티)  	             <-      엔티티
+			      	5. 반환된 엔티티를 뷰 템플릿으로 전달	       4. 조회한 데이터를 엔티티로 반환
+
+
+5.2 단일 데이터 조회하기
+
+5.2.1 URL 요청받기
+
+				컨트롤러
+클라이언트 	/articles/1 ->	   모델
+				    뷰
+
+서버의 컨트롤러가 URL 요청을 받는 것 까지 작업
+
+5.2.2 데이터 조회해 출력하기
+
+1) id 를 조회해 DB에서 해당 데이터 가져오기
+
+2) 가져온 데이터를 모델에 등록하기
+
+3) 조회한 데이터를 사용자에게 보여 주기 윈한 뷰 페이지를 만들고 반환하기
+
+** id를 조회해 데이터 가져오기
+
+DB에서 데이터를 가져오는 주체는 레포지토리.
+
+레포지토리 구현 객체는 @Autowired 어노테이션으로 주입 받음
+
+5.2.3	 실습 정리
+
+1 . 사용자가 입력한 데이터를 조회하려면 먼저 URL 요청을 해야함
+/articles/id 형식으로 URL 요청을 했음
+
+2. 컨트롤러는 @GetMapping("/article/{id}") 로 URL 요청을 받음.
+이 URL에 포함된 id 를 show() 메소드의 매개변수로 받는데, 이때 매개변수 앞에
+@PathVariable 어노테이션을 붙임	그래야 URL 을 가져 올 수 있음
+
+@GetMapping("/article/{id}")
+	public String show(@PathVariable Long id, Model model) {
+
+}
+
+3. 레포지토리에서 DB에 저장된 데이터를 id 로 조회할 때, findById() 메소드를 사용
+특별히 조회된 데이터가 없는 경우도 처리해야 하므로 orElse() 메소드로 null 이 반환되도록 함
+
+Article articleEntity = articleRepository.findById(id).orElse(null);
+
+4. id 로 DB에서 조회한 데이터는 모델에 article 이라는 이름으로 등록
+
+model.addAttribute("article", articleEntity);
+
+5. 최종적으로 모델에 등록한 데이터를 뷰 페이지에서 사용할 수 있게 설정함
+이때 샵(#) 과 슬래시 (/)를 이용해 열고 닫음으로써 데이터를 사용할 수 있는 영역을 지정함
+
+{{#article}}
+<tr>
+   <th>{{id}}</th>
+   <td>{{title}}</td>
+   <td>{{content}}</td>
+</tr>
+{{/article}}
+
+단일 데이터를 조회하는 과정을 통해 MVC, JPA, DB 의 상호 작용을 이해 할 수 있음
+
+5.3 데이터 목록 조회하기
+
+단일 데이터를 조회할 때는 레포지토리가 엔티티를 반환했다면,
+데이터 목록을 조회할 때는 엔티티의 묶음인 리스트를 반환해야함.
+
+5.3.1 URL 요청받기
+
+데이터 목록 조회는 localhost:8080/articles 라는 URL 요청이 들어왔을 때 처리
+
+
+5.3.2 데이터 조회해 출력하기
+
+1. DB에서 모든 Article 데이터 가져오기
+2. 가져온 Article 묶음을 모델에 등록하기
+3. 사용자에게 보여 줄 뷰 페이지 설정하기
+
+1. 모든 데이터 가져오기
+
+DB에서 데이터를 가져오려면 레포지토리가 필요함
+
+findAll() 메소드가 반환하는 데이터 타입은 Iterable인데 작성한 타입은 List라는 오류
+
+해결 방법 3 가지
+
+1) 캐스팅(형변환) Iterable, Collection, List 인터페이스의 상하 관계
+
+interface	Iterable
+
+	^
+
+interface	Collection
+
+	^
+
+interface	List
+
+	^
+
+class ArrayList
+
+캐스팅 -> 타입을 변환하는 것 - > 형변환 이라고도 함
+
+
+자바에서 상속관계가 있는 특정 객체는 상황에 따라 더 넓은 범위로 해석 될 수도,
+때로는 좁은 범위로 해석 될 수도 있음
+
+넓은 범위로 해석 -> 업 캐스팅
+좁은 범위로 해석 -> 다운 캐스팅
+
+findAll() 메소드가 반환하는 데이터 타입 Iterable<Article>을 List<Article>로 다운 캐스팅 가능
+
+2) articleEntityList의 타입을 findAll() 메소드가 반환하는 타입으로 맞추는 방법
+
+List<Article>을 Iterable<Article>로 업 캐스팅하면 오류 해결 가능
+
+3) Iterable 인터페이스가 익숙하지 않다면 많이 사용하는 ArrayList를 이용 가능
+
+findAll() 메소드가 Iterable이 아닌 ArrayList를 반환하도록 수정
+
+
+*** 머스테치 문법
+
+index.mustache 코드를 보면 {{#ariticleList}} {{/articleList}}
+
+머스테치 문법에 쓴 변수 (articleList)가 데이터 묶음인 경우 내부 코드가 반복됨.
+
+articleList에 데이터가 총 3개 있으면
+id가 1번, 2번, 3번 데이터
+뷰 페이지에서 이 데이터 묶음을 출력할 때는
+첫번째 데이터를 만나면 id 1번의 id, title, content를 출력
+두번째 데이터를 만나면 id 2번의 id, title, content를 출력
+마지막 세번째 데이터를 만났을 때도 마찬가지 for 문의 반복 실행과 같음
+
+
+
+
+

@@ -1,0 +1,25 @@
+8장 최종 정리
+
+게시글 삭제 방법
+
+클라이언트가 특정 게시글의 삭제 요청을 하면
+
+컨트롤러의 delete() 메소드에서 @GetMapping으로 받음
+
+delete() 메소드가 삭제 대상을 찾으려면 대표값인 id가 필요함
+
+이때 @PathVariable 어노테이션 사용
+
+@PathVariable은 @GetMapping의 URL 에서 중괄호에 둘러쌓인 값을 매개변수로 가져옴
+
+레포지토리는 이렇게 가져온 id로 DB에서 삭제 대상을 찾고 레포지토리가 제공하는 delete() 메소드로 데이터를 삭제
+
+이때 DB 내부에서는 DELETE라는 SQL문이 자동으로 수행
+
+삭제 작업이 끝나면 결과 페이지로 리다이렉트
+
+삭제 됐다는 메세지도 함께 출력
+
+이를 위해 RedirectAttributes 객체의 addFlashAttribute() 메소드를 이용
+
+addFlashAttribute() 메소드는 리다이렉트 되는 시점에 사용할 휘발성 데이터를 등록
