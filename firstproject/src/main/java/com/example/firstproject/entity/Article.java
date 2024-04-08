@@ -11,6 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor      // 기본 생성자 추가 어노테이션
 @ToString               //toString() 메소드를 대체하는 어노테이션 추가
 @Getter                 //Getter를 대체하는 어노테이션 추가
+
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // DB가 id 자동 생성
@@ -19,6 +20,13 @@ public class Article {
     private String title;
     @Column
     private String content;
+
+    public void patch(Article article) {
+        if(article.title != null)
+            this.title = article.title;
+        if(article.content != null)
+            this.content = article.content;
+    }
 
 
 //    Article(){      //기본 생성자
