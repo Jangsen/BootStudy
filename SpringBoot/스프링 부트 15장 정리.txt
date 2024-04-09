@@ -1,0 +1,70 @@
+15장 댓글 REST API의 개요
+
+댓글 REST API 컨트롤러, 서비스, DTO를 만들어 댓글 CRUD를 위한 REST API 완성하기
+
+REST API 컨트롤러		댓글 REST API를 위한 컨트롤러 서비스와 협업, 클라이언트 요청을 받아 응답(뷰 가 아닌 데이터 반환)
+
+
+서비스			REST 컨트롤러와 리포지토리 사이에서 비즈니스 로직(처리 흐름을 담당) 예외 상황이 발생했을 때
+			@Transactional로 변경된 데이터 롤백
+
+DTO			사용자에게 보여 줄 댓글 정보를 담은 것,, 단순히 클라이언트와 서버 간에 댓글 JSON 전송
+
+
+엔티티			DB 데이터를 담는 자바 객체  엔티티를 기반으로 테이블 생성 리포지토리가 DB 속 데이터를 조회하거나 전달할 때 사용
+
+
+리포지토리		엔티티를 관리하는 인터페이스 데이터 CRUD 기능 제공, 서비스로 부터 댓글 CRUD 명령을 받아 DB에 보내고 응답받음
+
+
+
+*** 댓글 CRUD를 하려면 REST API 주소가 필요
+
+
+GET == 댓글 조회
+
+POST == 댓글 생성
+
+PATCH == 댓글 수정
+
+DELETE == 댓글 삭제를 위한 메소드
+
+REST API 주소로 요청을 보내고 처리
+
+							GET
+							POST
+JSON		< --------- >		REST API		PATCH
+							DELETE
+
+api >
+	CommentApiController	댓글 컨트롤러 (댓글 REST API를 위한 컨트롤러
+dto >
+	CommentDto		댓글 DTO (클라이언트와 서버 간에 댓글 JSON 데이터 전송)
+entity >
+	Comment		댓글 엔티티 (서버와 DB 간에 데이터 매핑 및 로직 처리)
+repository >
+	CommentRepository	댓글 리포지토리 (DB에게 CRUD 요청을 보내는 JPA 인터페이스)
+service >
+	CommentService		댓글 서비스 (컨트롤러와 리포지토리 사이에서 처리 흐름 및 트랜잭션 관리)
+
+
+
+15.2 댓글 컨트롤러와 서비스 만들기
+
+댓글  REST API를 구현하려면 일반 컨트롤러가 아닌 REST 컨트롤러를 만들어야 함.
+
+REST 컨트롤러는 api 패키지에 만듦
+
+
+15.3 댓글 조회하기
+
+15.3.1 요청을 받아 응답할 컨트롤러 만들기
+
+1) 컨트롤러(CommentApiController) 로 가서 댓글 조회 요청을 받고 처리하는 메소드를 만듦
+
+
+
+15. 4 댓글 생성하기
+
+15.4.1 요청을 받아 응답할 컨트롤러 만들기
+

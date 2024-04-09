@@ -44,8 +44,7 @@ class CommentRepositoryTest {
     }
     @Test
     @DisplayName("특정 닉네임의 모든 댓글 조회")
-    void findByNickname()
-            /*
+    void findByNickname()            /*
             1. @DisplayName으로 테스트 이름을 설정
             2. 첫 번째 테스트 케이스로 Park의 모든 댓글을 조회 테스트 케이스를 중괄호로 묶고 테스트 단계를 주석으로 씀.
             3. 실제 데이터를 가져옴 . commentRepository.findByNickname(nickname) 메소드를 호출해 얻은 결과를 comments 리스트에 저장

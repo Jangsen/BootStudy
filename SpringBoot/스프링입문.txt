@@ -1,0 +1,64 @@
+public Optional<Member> findByName(String name){
+	for (Member member : store.values()){
+		if (member.getName().equals(name)){
+			return Optional.of(member);
+		}
+	}
+	return Optional.empty();
+}
+
+for (Member member : store.values())
+
+1. store 맵의 모든 멤버를 하나씩 반복하여 가져옴
+
+if(member.getName().equals(name))
+
+2. name과 맞는지 확인
+
+3. return Optional.of(member)
+
+주어진 member 객체를 감싸는 Optional 객체를 생성
+
+null 값이 아닌 값을 갖는 Optional 객체를 만들 수 있음
+
+만약 member 가 null 이 아니라면 
+
+Optional.of(member)는 해당 member 객체를 포함하는
+
+Optional을 반환
+
+만약 member 가 null 이라면
+
+NullPointException이 발생
+
+member 가 null 일 가능성이 있으면 
+
+Optional.ofNullable(member)를 사용하는 것이 안전함.
+
+
+스프링 빈 과 의존관계
+
+스프링 빈을 등록하고, 의존 관계 설정하기
+
+회원 컨트롤러가 회원 서비스와 회원 리포지토리를 사용 할 수 있게 의존관계를 준비.
+
+** 회원 컨트롤러에 의존관계 추가
+
+
+
+멤버 컨트롤러 == 멤버 서비스를 통해 회원가입 
+	           멤버 서비스를 통해 데이터 조회
+
+==	멤버 컨트롤러가 멤버 서비스를 의존한다.
+
+
+스프링 빈을 등록하는 2가지 방법
+
+1. 컴포넌트 스캔과 자동 의존관계 설정
+
+2. 자바 코드로 직접 스프링 빈 등록하기
+
+ 
+1) hellospringApplication
+
+2) 
