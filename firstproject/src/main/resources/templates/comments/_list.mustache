@@ -1,0 +1,87 @@
+<div id="comments-list">    <!-- 1. 댓글 목록 영역 설정 -->
+    {{#commentsDtos}}       <!-- 2. 댓글 목록 순회 -->
+        <div class="card m-3" id="card-header">   <!-- 3. 댓글 카드 만들고 id 부여 -->
+            <div class="card-header">
+                {{nickname}}    <!-- 1) 닉네임 보여주기 -->
+                <!-- Button trigger modal           붙여 넣기 & 코드 정리-->
+                <button type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#comment-edit-Modal"
+                        data-bs-id="{{id}}"
+                        data-bs-nickname="{{nickname}}"
+                        data-bs-body="{{body}}"
+                        data-bs-article-id="{{articleId}}">수정</button>      <!-- 제목 변경 -->
+                        <!-- 댓글 id 저장
+                             댓글의 nickname 저장
+                             댓글의 body 저장
+                             보모 게시글의 id 저장 .추가.-->
+            </div>     <!-- 4. 댓글 헤더 영역 설정 -->
+            <div class="card-body">
+                {{body}}        <!-- 2)댓글 본문 보여주기 -->
+            </div>       <!-- 5. 댓글 본문 영역 설정 -->
+        </div>
+    {{/commentsDtos}}
+<!-- Modal -->
+<div class="modal fade" id="comment-edit-Modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <!-- 닉네임 입력 -->
+                    <div class="mb-3">
+                        <label class="form-label">닉네임</label>   <!-- 닉네임 입력 폼 만들기 -->
+                        <input type="text" class="form-control" id="edit-comment-nickname">
+                    </div>
+                    <!-- 댓글 본문 입력 -->
+                    <div class="mb-3">
+                        <label class="form-label">댓글 내용</label>   <!-- 댓글 본문 입력 폼 만들기 -->
+                        <textarea type="text" class="form-control" row="3"
+                                  id="edit-comment-body"></textarea>
+                    </div>
+                    <div>
+                        <!-- 히든 인풋 -->
+                            <input type="hidden" id="edit-comment-id">
+                            <input type="hidden" id="edit-comment-article-id">
+                    </div>
+                    <!-- 전송 버튼 -->
+                    <button type="button" class="btn btn-primary"
+                            id="comment-update-btn">수정 완료</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 모달 이벤트 처리 -->
+<script>
+    {
+        // 모달 요소 선택
+        /*
+        show.bs.modal       모달이 표시되기 직전 실행되는 이벤트
+        shown.bs.modal      모달이 표시된 후 실행되는 이벤트
+        hide.bs.modal       모달이 숨겨지기 직전 실행되는 이벤트
+        hidden.bs.modal     모달이 숨겨진 후 실행되는 이벤트
+        */
+        const commentEditModal = document.querySelector("#comment-edit-Modal");
+            commentEditModal.addEventListener("show.bs.modal", function(event) {
+                // 1. 트리거 버튼 선택
+                const triggerBtn = event.relatedTarget;     // show.bs.modal 이벤트에서 event.target은 모달이 되고,
+                                                            // event.relatedTarget은 트리거 버튼이 됨(이벤트의 주최가 모달이기 때문)
+                // 2. 데이터 가져오기
+                const id = triggerBtn.getAttribute("data-bs-id");   // 1. id 가져오기
+                const nickname = triggerBtn.getAttribute("data-bs-nickname");   // 2. nickname 가져오기
+                const body = triggerBtn.getAttribute("data-bs-body");   // 3. body 가져오기
+                const articleId = triggerBtn.getAttribute("data-bs-article-id");    // 4. 부모 id 가져오기
+                // 3. 수정 폼에 데이터 반영
+                document.querySelector("#edit-comment-nickname").value = nickname;      // 1. 닉네임 반영
+                document.querySelector("#edit-comment-body").value = body;              // 2. 본문 반영
+                document.querySelector("#edit-comment-id").value = id;                  // 3. id 반영
+                document.querySelector("#edit-comment-article-id").value = articleId;   // 4. 부모 id 반영
+            });
+    }
+</script>
+</div>

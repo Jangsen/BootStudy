@@ -1,8 +1,10 @@
 package com.example.firstproject.controller;
 
 import com.example.firstproject.dto.ArticleForm;
+import com.example.firstproject.dto.CommentDto;
 import com.example.firstproject.entity.Article;
 import com.example.firstproject.repository.ArticleRepository;
+import com.example.firstproject.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,13 +16,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Controller
 public class ArticleController {
     @Autowired      //스프링 부트가 미리 생성해 놓은 레포지토리 객제 주입(DI)     ** 의존성 주입 **
 private ArticleRepository articleRepository;
+    @Autowired
+    private CommentService commentService;      // 서비스 객체 주입
+
     @GetMapping("/articles/new")
         public String newArticleForm(){
             return "articles/new";
@@ -47,10 +51,12 @@ private ArticleRepository articleRepository;
 //            Article articleEntity = articleRepository.findById(id);   빨간 물결 표시  articleRepository가 findBy(id)로 찾은 값을 반환 할 때 반환형이 Article이 아니기때문에 발생하는 문제
 //            Optional<Article> aricleEntity = articleRepository.findById(id);   반환형 == Optional<Article> 타입    자바 8 이상 사용 가능
               Article articleEntity = articleRepository.findById(id).orElse(null);  // id 값이 없으면 null을 반환하라는 뜻 ( 값이 있으면 articleEntity 변수에 값을 넣고 없으면 null을 저장 )
+              List<CommentDto> commentsDtos = commentService.comments(id);  // CommentService의 comments(id) 메소드를 호출해 조회한 댓글 목록을 List<CommentsDto> 타입의 commentsDtos 뱐수에 저장
             // 2. 모델에 데이터 등록하기  (articleEntity에 담긴 데이터를 모델에 등록하는 이유 MVC 패턴에 따라 조회한 데이터를 뷰 페이지에서 사용하기 위함)
               //name 이라는 이름으로 value 객체 추가
               //model.addAttribute(String name, Object value);
               model.addAttribute("article", articleEntity);
+              model.addAttribute("commentsDtos", commentsDtos); // 댓글 목록 모델에 등록
             // 3. 뷰 페이지 반환하기
               return "articles/show";
         }
